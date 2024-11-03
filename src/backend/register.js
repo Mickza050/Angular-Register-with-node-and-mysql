@@ -10,25 +10,25 @@ app.use(express.json());
 
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root',
-    password: 'root@desktop',
-    database: 'angular_crud'
+    user: 'db_username',
+    password: 'db_password',
+    database: 'db_name'
 });
 
 app.post('/register', (req, res) => {
     const { username, password } = req.body;
 
-    // ตรวจสอบ username ซ้ำ
+    // Sheck the same username in database
     db.query('SELECT * FROM users WHERE username = ?', [username], (err, result) => {
         if (result.length > 0) {
             return res.status(400).json({ message: 'Username is already taken' });
         }
 
-        // สร้าง UUID และเข้ารหัส password ด้วย SHA256
+        // Create UUID and hash the password with SHA256
         const uuid = uuidv4();
         const hashedPassword = CryptoJS.SHA256(password).toString();
 
-        // เพิ่มข้อมูลไปที่ตาราง users
+        // Add info into "user" table
         db.query(
             'INSERT INTO users (uuid, username, password) VALUES (?, ?, ?)',
             [uuid, username, hashedPassword],
