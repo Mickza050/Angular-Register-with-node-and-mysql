@@ -18,7 +18,7 @@ const db = mysql.createConnection({
 app.post('/register', (req, res) => {
     const { username, password } = req.body;
 
-    // Sheck the same username in database
+    // Check the same username in database
     db.query('SELECT * FROM users WHERE username = ?', [username], (err, result) => {
         if (result.length > 0) {
             return res.status(400).json({ message: 'Username is already taken' });
